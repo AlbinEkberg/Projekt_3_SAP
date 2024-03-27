@@ -6,7 +6,9 @@ class TileCreator:
         self.x = x
         self.y = y
         self.screen = screen
-        self.boxImage = pygame.image.load("img/box.png")
+        # makes the boxes different size depending on the size of the screen
+        scale = 0.14
+        self.boxImage = pygame.transform.scale(pygame.image.load("img/box.png"), (int(self.screen.get_width() * scale), int(self.screen.get_width() * scale)))
         self.hitbox = self.boxImage.get_rect()
 
     def blitTile(self):

@@ -6,7 +6,7 @@ from scripts.tilemap import TileMap
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1000, 600))
+        self.screen = pygame.display.set_mode((1024, 576))
 
     def run(self):
         eagle = Move(pygame.image.load("img/eagle.png"), 0, 0, 1)
