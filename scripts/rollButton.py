@@ -7,10 +7,11 @@ class RollButton:
         self.screen = screen
         scale = 0.2
         self.buttonImage = pygame.transform.scale(pygame.image.load("img/roll-button.png"), (int(self.screen.get_width() * scale), int(self.screen.get_width() * scale * 0.5)))
-        
-        
-        
         self.hitbox = self.buttonImage.get_rect()
+        self.hitbox.x = x
+        self.hitbox.y = y
+        self.clicked = False
+
 
     def blitTile(self):
         self.screen.blit(self.buttonImage, (self.x, self.y))
@@ -19,12 +20,12 @@ class RollButton:
         pos = pygame.mouse.get_pos()
 
         if self.hitbox.collidepoint(pos):
-            
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
-                action = True
-
-            if pygame.mouse.get_pressed()[0] == 0 and self.clicked == True:
+                return True
+            elif pygame.mouse.get_pressed()[0] == 0:
                 self.clicked = False
-                action = False
+                return False
+
+        
         

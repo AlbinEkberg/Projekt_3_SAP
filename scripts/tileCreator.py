@@ -2,6 +2,7 @@ import pygame
 from scripts.item import Item
 
 class TileCreator:
+
     def __init__(self, x, y, screen):
         self.x = x
         self.y = y
@@ -10,12 +11,13 @@ class TileCreator:
         scale = 0.14
         self.boxImage = pygame.transform.scale(pygame.image.load("img/box.png"), (int(self.screen.get_width() * scale), int(self.screen.get_width() * scale)))
         self.hitbox = self.boxImage.get_rect()
+        self.content = {"name": None, "img": self.boxImage, "atk": None, "hp": None, "ability": None}
 
-    def blitTile(self):
+    def blitTile(self, creatureImage):
         self.screen.blit(self.boxImage, (self.x, self.y))
+        self.screen.blit(creatureImage, (self.x, self.y))
 
     def clicked(self, selected):
-
         # Gets mouse position
         pos = pygame.mouse.get_pos()
 
@@ -38,6 +40,5 @@ class TileCreator:
 
             if pygame.mouse.get_pressed()[0] == 0 and self.clicked == True:
                 self.clicked = False
-
 
         return selected

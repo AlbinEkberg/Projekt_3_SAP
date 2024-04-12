@@ -16,7 +16,6 @@ class Move:
         #gets mouse position
         pos = pygame.mouse.get_pos()
 
-
         if self.hitbox.collidepoint(pos):
             
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
