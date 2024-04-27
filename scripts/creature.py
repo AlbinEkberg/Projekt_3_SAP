@@ -1,24 +1,43 @@
 import pygame
 import random
-import sys
 from scripts.ability import Ability
 
 class Creature:
-    scale = 0.14
+    def __init__(self, screen):
+        self.screen = screen
+        scale = 0.14
+        size = (int(self.screen.get_width() * scale), int(self.screen.get_width() * scale))
 
-    #fixa så man får fullscreen widthen
-    width = pygame.FULLSCREEN.get_width
+        gnomeImage = pygame.transform.smoothscale(pygame.image.load("img/gnome.png"), size)
+        goblinImage = pygame.transform.smoothscale(pygame.image.load("img/goblin.png"), size)
+        ogreImage = pygame.transform.smoothscale(pygame.image.load("img/ogre.png"), size)
+        trexImage = pygame.transform.smoothscale(pygame.image.load("img/gnome.png"), size)
 
-    print("balls")
-    gnomeImage = pygame.transform.scale(pygame.image.load("img/gnome.png"), (int(width * scale), int(width * scale)))
-    goblinImage = pygame.transform.scale(pygame.image.load("img/goblin.png"), (int(width * scale), int(width * scale)))
-    ogreImage = pygame.transform.scale(pygame.image.load("img/ogre.png"), (int(width * scale), int(width * scale)))
+        self.creatureList1 = [
+        {"type": "gnome", "img": gnomeImage, "atk": 1, "hp": 4, "ability": Ability.gnomeAbility(), "lvl": 1, "xp": 0}, 
+        {"type": "goblin", "img": goblinImage, "atk": 1, "hp": 1, "ability": Ability.goblinAbility(), "lvl": 1, "xp": 0}
+        ]
 
+        self.creatureList2 = [
+            {"type": "ogre", "img": ogreImage, "atk": 3, "hp": 5, "ability": None, "lvl": 1, "xp": 0}
+        ]
 
-    creatureList = [
-        {"name": "gnome", "img": gnomeImage, "atk": 1, "hp": 5, "ability": Ability.gnomeAbility()}, 
-        {"name": "goblin", "img": goblinImage, "atk": 1, "hp": 1, "ability": Ability.goblinAbility()}, 
-        {"name": "ogre", "img": ogreImage, "atk": 3, "hp": 5, "ability": None}]
+        self.creatureList3 = [
+            {"type": "trex", "img": trexImage, "atk": 7, "hp": 4, "ability": None, "lvl": 1, "xp": 0}
+        ]
 
-    def generateCreature():
-        return Creature.creatureList[random.randint(1, len(Creature.creatureList)) - 1]
+    def handleHealth(self, hp):
+        pass
+
+    def generateCreature(self, shopStage, type):
+        if type == "random":
+            if shopStage == 1:
+                availableCreatures = self.creatureList1
+            
+            if shopStage == 2:
+                availableCreatures = self.creatureList1 + self.creatureList2
+            
+            if shopStage >= 3:
+                availableCreatures = self.creatureList1 + self.creatureList2 + self.creatureList3
+            
+            return availableCreatures[random.randint(1, len(availableCreatures)) - 1]

@@ -1,41 +1,70 @@
 import sys
 import pygame
-from scripts.move import Move
-from scripts.tilemap import TileMap
-from scripts.rollButton import RollButton
+import moviepy.editor
+from scripts.player import Player
+from scripts.battle import Battle
+from scripts.button import Button
 
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #pygame.FULLSCREEN (use later)
+        self.clock = pygame.time.Clock()  # Create a clock object for controlling frame rate
+        self.frame_rate = 0  # Set the desired frame rate (unlimited)
+        self.background_frame_rate = 30  # Set the desired background frame rate (frames per second)
+        self.background_frame_delay = 1000 / self.background_frame_rate  # Delay between background frames (in milliseconds)
+        self.last_background_update = pygame.time.get_ticks()  # Initialize last background update time
 
     def run(self):
-        eagle = Move(pygame.image.load("img/eagle.png"), 0, 0, 1)
-        tilemap = TileMap(self.screen)
+        # Load background video
+        background_video = moviepy.editor.VideoFileClip("img/background.mp4")
+        background_frames = []
+        for frame in background_video.iter_frames():
+            background_frames.append(pygame.image.fromstring(frame.tostring(), background_video.size, "RGB"))
+        frame_index = 0  # Track the current frame index
 
-        #creates the roll button
-        self.rollButton = RollButton(10, int(self.screen.get_height() - (1.75 * tilemap.boxsizeWithMargin)), self.screen)
+        player1 = Player(self.screen)
+        player2 = Player(self.screen)
+        battle = Battle(self.screen)
+        self.nextButton = Button(self.screen, pygame.image.load("img/next_button.png"), self.screen.get_width() - player1.rollButton.buttonImage.get_width() - 10, int(self.screen.get_height() - (10 + int((self.screen.get_width() * 0.14) + 10) + int(self.screen.get_width() * 0.14 * 0.2) + (self.screen.get_width() * 0.18 * 0.5))))
+        gameStage = 1
+        shopStage = 1
 
-        while True:
-            self.screen.fill((100, 100, 0))
+        running = True
+        while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-            
-            if eagle.movableImages(self.screen):
-                selected = eagle
-                selected.hitbox.x += 50
-            
-            if self.rollButton.rollOnClick():
-                tilemap.updateShop()
+                    running = False
 
-            #displays the roll button
-            self.rollButton.blitTile()
+            # Update and display background frames
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_background_update >= self.background_frame_delay:
+                self.screen.blit(background_frames[frame_index], (0, 0))
+                frame_index = (frame_index + 1) % len(background_frames)
+                self.last_background_update = current_time
 
-            #displays the tiles
-            tilemap.displayTiles()
+            if gameStage != 3:
+                self.nextButton.displayButton()
+
+                if self.nextButton.activateOnClick():
+                    gameStage += 1
+            
+            if gameStage == 1:
+                player1.store(shopStage)
+            elif gameStage == 2:
+                player2.store(shopStage)
+            elif gameStage == 3:
+                battle.displayBattle(gameStage)
+                gameStage == battle.gameStage
+            elif gameStage == 4:
+                battle.duringBattle(gameStage)
 
             pygame.display.update()
+
+            # Control frame rate for the rest of the game
+            self.clock.tick(self.frame_rate)
+
+        pygame.quit()
+        sys.exit()
 
 Game().run()
