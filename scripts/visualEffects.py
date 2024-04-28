@@ -10,7 +10,9 @@ class VisualEffects:
         pos = pygame.mouse.get_pos()
 
         if selected != None:
-            self.screen.blit(selected["img"], (int(pos[0] - selected["img"].get_width() / 2), int(pos[1] - selected["img"].get_height() / 2)))
+            imageToDisplay = pygame.transform.smoothscale(selected["img"], (int(self.screen.get_width() * 0.1), int(self.screen.get_width() * 0.1)))
+            
+            self.screen.blit(imageToDisplay, imageToDisplay.get_rect(center=(pos)))
 
     def infoWhileHover(self, selected, content, pos):
 

@@ -9,35 +9,35 @@ class Tile:
         self.screen = screen
         # makes the boxes different size depending on the size of the screen
         self.scale = scale
-        tileWidth = int(self.screen.get_width() * self.scale)
-        self.tileImage = pygame.transform.smoothscale(pygame.image.load("img/box.png"), (tileWidth, tileWidth))
+        self.tileWidth = int(self.screen.get_width() * self.scale)
+        self.tileImage = pygame.transform.smoothscale(pygame.image.load("img/box.png"), (self.tileWidth, self.tileWidth))
         self.hitbox = self.tileImage.get_rect()
         self.hitbox.x = x
         self.hitbox.y = y
         self.content = None
 
-        statWidth = int(tileWidth * 0.4)
+        statWidth = int(self.tileWidth * 0.4)
         self.tileType = tileType
-        fontsize = int(tileWidth * 0.2)
+        fontsize = int(self.tileWidth * 0.2)
 
         self.hpImage = pygame.transform.smoothscale(pygame.image.load("img/health.png"), (statWidth, statWidth))
-        self.hpImagePos = ((self.x + 10), (self.y + tileWidth + 10 - statWidth))
+        self.hpImagePos = ((self.x + 10), (self.y + self.tileWidth + 10 - statWidth))
         self.hpText = TextHandler(self.screen, fontsize, (int(self.hpImagePos[0] + statWidth / 2), int(self.hpImagePos[1] + statWidth / 2)), True)
 
         self.atkImage = pygame.transform.smoothscale(pygame.image.load("img/attack.png"), (statWidth, statWidth))
-        self.atkImagePos = ((self.x + tileWidth - 10 - statWidth), (self.y + tileWidth + 10 - statWidth))
+        self.atkImagePos = ((self.x + self.tileWidth - 10 - statWidth), (self.y + self.tileWidth + 10 - statWidth))
         self.atkText = TextHandler(self.screen, fontsize, (int(self.atkImagePos[0] + statWidth / 2), int(self.atkImagePos[1] + statWidth / 2)), True)
 
-        self.lvlText = TextHandler(self.screen, fontsize, (int(self.x + tileWidth * 0.15), int(self.y - fontsize/2)), True)
+        self.lvlText = TextHandler(self.screen, fontsize, (int(self.x + self.tileWidth * 0.15), int(self.y - fontsize/2)), True)
         self.xpBubbleWidth = fontsize
-        self.xpBubblePos = (int(self.x + tileWidth * 0.15 + self.xpBubbleWidth), int(self.y - fontsize))
+        self.xpBubblePos = (int(self.x + self.tileWidth * 0.15 + self.xpBubbleWidth), int(self.y - fontsize))
         self.xpBubbleFull = pygame.transform.smoothscale(pygame.image.load("img/xp_full.png"), (self.xpBubbleWidth, self.xpBubbleWidth))
         self.xpBubbleEmpty = pygame.transform.smoothscale(pygame.image.load("img/xp_empty.png"), (self.xpBubbleWidth, self.xpBubbleWidth))
 
     def blitTile(self):
         self.screen.blit(self.tileImage, (self.x, self.y))
         if self.content != None:
-            self.screen.blit(self.content["img"], (self.x, self.y))
+            self.screen.blit(pygame.transform.smoothscale(self.content["img"], (self.tileWidth, self.tileWidth)), (self.x, self.y))
             self.screen.blit(self.hpImage, self.hpImagePos)
             self.screen.blit(self.atkImage, self.atkImagePos)
 

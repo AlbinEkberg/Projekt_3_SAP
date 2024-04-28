@@ -3,15 +3,12 @@ import random
 from scripts.ability import Ability
 
 class Creature:
-    def __init__(self, screen):
-        self.screen = screen
-        scale = 0.14
-        size = (int(self.screen.get_width() * scale), int(self.screen.get_width() * scale))
+    def __init__(self):
 
-        gnomeImage = pygame.transform.smoothscale(pygame.image.load("img/gnome.png"), size)
-        goblinImage = pygame.transform.smoothscale(pygame.image.load("img/goblin.png"), size)
-        ogreImage = pygame.transform.smoothscale(pygame.image.load("img/ogre.png"), size)
-        trexImage = pygame.transform.smoothscale(pygame.image.load("img/gnome.png"), size)
+        gnomeImage = pygame.image.load("img/gnome.png")
+        goblinImage = pygame.image.load("img/goblin.png")
+        ogreImage = pygame.image.load("img/ogre.png")
+        trexImage = pygame.image.load("img/gnome.png")
 
         self.creatureList1 = [
         {"type": "gnome", "img": gnomeImage, "atk": 1, "hp": 4, "ability": Ability.gnomeAbility(), "lvl": 1, "xp": 0}, 

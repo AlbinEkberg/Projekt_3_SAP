@@ -23,7 +23,7 @@ class TileHandler:
         self.shopTile3 = Tile(2 * self.boxsizeWithMargin + 10, int(self.screen.get_height() - self.boxsizeWithMargin), screen, scale, "shopTile")
         self.shopTile4 = Tile(3 * self.boxsizeWithMargin + 10, int(self.screen.get_height() - self.boxsizeWithMargin), screen, scale, "shopTile")
 
-        self.creature = Creature(self.screen)
+        self.creature = Creature()
 
         self.visualEffects = VisualEffects(self.screen)
 

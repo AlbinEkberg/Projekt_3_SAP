@@ -43,7 +43,7 @@ class Game:
                 frame_index = (frame_index + 1) % len(background_frames)
                 self.last_background_update = current_time
 
-            if gameStage != 3:
+            if gameStage < 3:
                 self.nextButton.displayButton()
 
                 if self.nextButton.activateOnClick():
@@ -54,10 +54,12 @@ class Game:
             elif gameStage == 2:
                 player2.store(shopStage)
             elif gameStage == 3:
-                battle.displayBattle(gameStage)
-                gameStage == battle.gameStage
+                battle.startOfBattle(gameStage, player1.tileHandler, player2.tileHandler)
+                battle.displayBattle()
+                gameStage = battle.gameStage
             elif gameStage == 4:
-                battle.duringBattle(gameStage)
+                battle.duringBattle()
+                battle.displayBattle()
 
             pygame.display.update()
 
