@@ -1,8 +1,9 @@
 import pygame
 from scripts.tile import Tile
+from scripts.moveForward import MoveForward
 
 class Battle:
-    def __init__(self, screen):
+    def __init__(self, screen, frame_rate):
         self.screen = screen
         scale = 0.09
         tileWidth = int(self.screen.get_width() * scale)
@@ -24,6 +25,12 @@ class Battle:
         self.player2Tile4 = Tile(self.screen.get_width() - (4 * self.boxsizeWithMargin + 5), self.tileY, screen, scale)
         self.player2Tile5 = Tile(self.screen.get_width() - (5 * self.boxsizeWithMargin + 5), self.tileY, screen, scale)
 
+        player1TilesArray = [self.player1Tile5, self.player1Tile4, self.player1Tile3, self.player1Tile2, self.player1Tile1]
+        player2TilesArray = [self.player2Tile5, self.player2Tile4, self.player2Tile3, self.player2Tile2, self.player2Tile1]
+
+        self.player1moveForward = MoveForward(self.screen, self.boxsizeWithMargin, frame_rate, "left", player1TilesArray)
+        self.player2moveForward = MoveForward(self.screen, self.boxsizeWithMargin, frame_rate, "right", player2TilesArray)
+
     def displayBattle(self):
         self.player1Tile1.blitTile()
         self.player1Tile2.blitTile()
@@ -36,23 +43,6 @@ class Battle:
         self.player2Tile3.blitTile()
         self.player2Tile4.blitTile()
         self.player2Tile5.blitTile()
-
-    def moveForward(self, whichPlayer):
-        player1TilesArray = [self.player1Tile1, self.player1Tile2, self.player1Tile3, self.player1Tile4, self.player1Tile5]
-        player2TilesArray = [self.player2Tile1, self.player2Tile2, self.player2Tile3, self.player2Tile4, self.player2Tile5]
-        whichPlayer -= 1
-        playerArray = [player1TilesArray, player2TilesArray]
-        i = 0
-
-        # while loop isn't done until there aren't any empty spots left infront of any creature
-        while i < 4:
-            if playerArray[whichPlayer][i].content != None and playerArray[whichPlayer][i + 1].content == None:
-                playerArray[whichPlayer][i + 1].content = playerArray[whichPlayer][i].content
-                playerArray[whichPlayer][i].content = None
-                i = 0
-            else:
-                i += 1
-
 
     def startOfBattle(self, gameStage, player1TileHandler, player2TileHandler):
         self.gameStage = gameStage
@@ -73,8 +63,8 @@ class Battle:
         self.gameStage += 1
 
     def duringBattle(self):
-        self.moveForward(1)
-        self.moveForward(2)
+        self.player1moveForward.moveForward()
+        self.player2moveForward.moveForward()
 
 
     # after battle => shopStage += 1

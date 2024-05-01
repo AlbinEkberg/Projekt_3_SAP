@@ -10,8 +10,8 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN) #pygame.FULLSCREEN (use later)
         self.clock = pygame.time.Clock()  # Create a clock object for controlling frame rate
-        self.frame_rate = 0  # Set the desired frame rate (unlimited)
-        self.background_frame_rate = 30  # Set the desired background frame rate (frames per second)
+        self.frame_rate = 60  # Set the desired frame rate
+        self.background_frame_rate = 30  # Set the desired background frame rate
         self.background_frame_delay = 1000 / self.background_frame_rate  # Delay between background frames (in milliseconds)
         self.last_background_update = pygame.time.get_ticks()  # Initialize last background update time
 
@@ -25,7 +25,7 @@ class Game:
 
         player1 = Player(self.screen)
         player2 = Player(self.screen)
-        battle = Battle(self.screen)
+        battle = Battle(self.screen, self.frame_rate)
         self.nextButton = Button(self.screen, pygame.image.load("img/next_button.png"), self.screen.get_width() - player1.rollButton.buttonImage.get_width() - 10, int(self.screen.get_height() - (10 + int((self.screen.get_width() * 0.14) + 10) + int(self.screen.get_width() * 0.14 * 0.2) + (self.screen.get_width() * 0.18 * 0.5))))
         gameStage = 1
         shopStage = 1
@@ -54,12 +54,12 @@ class Game:
             elif gameStage == 2:
                 player2.store(shopStage)
             elif gameStage == 3:
-                battle.startOfBattle(gameStage, player1.tileHandler, player2.tileHandler)
                 battle.displayBattle()
+                battle.startOfBattle(gameStage, player1.tileHandler, player2.tileHandler)
                 gameStage = battle.gameStage
             elif gameStage == 4:
-                battle.duringBattle()
                 battle.displayBattle()
+                battle.duringBattle()
 
             pygame.display.update()
 
