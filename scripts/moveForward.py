@@ -34,8 +34,9 @@ class MoveForward:
         if  self.travelDistance != 0:
             self.movementDone = self.visualEffects.moveForwardAnimation(self.travelDistance, self.contentToMove, self.tileArray[self.i], self.direction)
 
-        if self.movementDone == True and self.contentToMove != None:
-            self.tileArray[self.moveToIndex].content = self.contentToMove
+        if self.movementDone == True:
+            if self.contentToMove != None:
+                self.tileArray[self.moveToIndex].content = self.contentToMove
             self.contentToMove = None
             self.i = 0
             self.moveToIndex = None

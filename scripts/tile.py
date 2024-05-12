@@ -20,6 +20,8 @@ class Tile:
         self.tileType = tileType
         fontsize = int(self.tileWidth * 0.2)
 
+        self.ableToBuy = True
+
         self.hpImage = pygame.transform.smoothscale(pygame.image.load("img/health.png"), (statWidth, statWidth))
         self.hpImagePos = ((self.x + 10), (self.y + self.tileWidth + 10 - statWidth))
         self.hpText = TextHandler(self.screen, fontsize, (int(self.hpImagePos[0] + statWidth / 2), int(self.hpImagePos[1] + statWidth / 2)), True)
@@ -34,15 +36,16 @@ class Tile:
         self.xpBubbleFull = pygame.transform.smoothscale(pygame.image.load("img/xp_full.png"), (self.xpBubbleWidth, self.xpBubbleWidth))
         self.xpBubbleEmpty = pygame.transform.smoothscale(pygame.image.load("img/xp_empty.png"), (self.xpBubbleWidth, self.xpBubbleWidth))
 
+        self.displayWithCreature = True
+
     def blitTile(self):
         self.screen.blit(self.tileImage, (self.x, self.y))
         if self.content != None:
-            self.screen.blit(pygame.transform.smoothscale(self.content["img"], (self.tileWidth, self.tileWidth)), (self.x, self.y))
-            self.screen.blit(self.hpImage, self.hpImagePos)
-            self.screen.blit(self.atkImage, self.atkImagePos)
+            if self.displayWithCreature == True:
+                self.screen.blit(pygame.transform.smoothscale(self.content["img"], (self.tileWidth, self.tileWidth)), (self.x, self.y))
 
-            self.hpText.drawText(self.content["hp"])
-            self.atkText.drawText(self.content["atk"])
+            self.displayStats()
+
             self.lvlText.drawText("lvl " + str(self.content["lvl"]))
 
             xpBubblePosX = self.xpBubblePos[0]
@@ -60,11 +63,15 @@ class Tile:
                 else:
                     xpBubblePosX += self.xpBubbleWidth
 
-    def handleContent(self, selected):
-        selected = selected
+    def displayStats(self):
+        self.screen.blit(self.hpImage, self.hpImagePos)
+        self.screen.blit(self.atkImage, self.atkImagePos)
+        self.hpText.drawText(self.content["hp"])
+        self.atkText.drawText(self.content["atk"])
 
+    def handleContent(self, selected):
         # if you have nothing selected pick up the content
-        if selected == None and self.content != None:
+        if selected == None and self.content != None and self.ableToBuy == True:
             selected = self.content
             self.content = None
 
