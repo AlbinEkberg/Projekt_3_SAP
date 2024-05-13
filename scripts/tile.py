@@ -18,21 +18,23 @@ class Tile:
 
         statWidth = int(self.tileWidth * 0.4)
         self.tileType = tileType
-        fontsize = int(self.tileWidth * 0.2)
+        self.fontsize = int(self.tileWidth * 0.2)
 
         self.ableToBuy = True
 
         self.hpImage = pygame.transform.smoothscale(pygame.image.load("img/health.png"), (statWidth, statWidth))
         self.hpImagePos = ((self.x + 10), (self.y + self.tileWidth + 10 - statWidth))
-        self.hpText = TextHandler(self.screen, fontsize, (int(self.hpImagePos[0] + statWidth / 2), int(self.hpImagePos[1] + statWidth / 2)), True)
+        self.hpTextPos = (int(self.hpImagePos[0] + statWidth / 2), int(self.hpImagePos[1] + statWidth / 2))
+        self.hpText = TextHandler(self.screen, self.fontsize, self.hpTextPos, True)
 
         self.atkImage = pygame.transform.smoothscale(pygame.image.load("img/attack.png"), (statWidth, statWidth))
         self.atkImagePos = ((self.x + self.tileWidth - 10 - statWidth), (self.y + self.tileWidth + 10 - statWidth))
-        self.atkText = TextHandler(self.screen, fontsize, (int(self.atkImagePos[0] + statWidth / 2), int(self.atkImagePos[1] + statWidth / 2)), True)
+        self.atkTextPos = (int(self.atkImagePos[0] + statWidth / 2), int(self.atkImagePos[1] + statWidth / 2))
+        self.atkText = TextHandler(self.screen, self.fontsize, self.atkTextPos, True)
 
-        self.lvlText = TextHandler(self.screen, fontsize, (int(self.x + self.tileWidth * 0.15), int(self.y - fontsize/2)), True)
-        self.xpBubbleWidth = fontsize
-        self.xpBubblePos = (int(self.x + self.tileWidth * 0.15 + self.xpBubbleWidth), int(self.y - fontsize))
+        self.lvlText = TextHandler(self.screen, self.fontsize, (int(self.x + self.tileWidth * 0.15), int(self.y - self.fontsize/2)), True)
+        self.xpBubbleWidth = self.fontsize
+        self.xpBubblePos = (int(self.x + self.tileWidth * 0.15 + self.xpBubbleWidth), int(self.y - self.fontsize))
         self.xpBubbleFull = pygame.transform.smoothscale(pygame.image.load("img/xp_full.png"), (self.xpBubbleWidth, self.xpBubbleWidth))
         self.xpBubbleEmpty = pygame.transform.smoothscale(pygame.image.load("img/xp_empty.png"), (self.xpBubbleWidth, self.xpBubbleWidth))
 
@@ -87,7 +89,8 @@ class Tile:
                 selected = None
                 self.content["xp"] += 1
                 self.content["hp"] += 1
-                self.content["atk"] += 1
+                if self.content["type"] != "rock":
+                    self.content["atk"] += 1
             else:
                 temp = selected
                 selected = self.content

@@ -20,12 +20,32 @@ class CreatureInfo:
 
         match type:
             case "gnome":
-                self.infoText.drawText("Gnome\nwhen sold:\nrolls for free\n(does not improve with lvl)")
+                self.infoText.drawText("Gnome\nwhen sold:\nroll for free as many\ntimes as this has lvls")
             case "goblin":
                 self.infoText.drawText("Goblin\nend of battle:\nsteals gold equivalent\nto the goblins lvl")
+            case "bigfoot":
+                self.infoText.drawText("Bigfoot")
+            case "knight":
+                self.infoText.drawText("Knight\nthis creature doesn't\nhave an ability")
+            case "pig":
+                self.infoText.drawText("Pig")
+            case "unicorn":
+                self.infoText.drawText("Unicorn\nend of battle:\ngains hp depending\non its level")
             case "ogre":
                 self.infoText.drawText("Ogre\nstart of batte:\nattack increases the\nless creatures you have")
-            case "gingerbread man":
+            case "gingerbread":
                 self.infoText.drawText("Gingerbread Man\non death:\ngives hp depending on lvl\nto the creature behind")
+            case "rock":
+                self.infoText.drawText("rock\ndoes not get bonus\nattack when combined\nwith other rocks")
+            case "bomb":
+                self.infoText.drawText("Bomb\non death:\nexplodes, damaging ALL\nadjacent creatures")
+            case "witch":
+                self.infoText.drawText("Witch")
+            case "minotaur":
+                self.infoText.drawText("Minotaur")
+            case "trex":
+                self.infoText.drawText("Trex")
+            case "mirror":
+                self.infoText.drawText("Mirror")
 
         self.screen.blit(self.infoSurface, pos)

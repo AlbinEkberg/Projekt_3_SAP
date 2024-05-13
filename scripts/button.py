@@ -11,6 +11,7 @@ class Button:
         self.hitbox.x = self.x
         self.hitbox.y = self.y
         self.clicked = False
+        self.hover = False
 
     def displayButton(self, changedImage=None):
         if changedImage != None:
@@ -19,7 +20,9 @@ class Button:
 
     def activateOnClick(self):
         pos = pygame.mouse.get_pos()
+        self.hover = False
         if self.hitbox.collidepoint(pos):
+            self.hover = True
             if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
                 self.clicked = True
                 return True

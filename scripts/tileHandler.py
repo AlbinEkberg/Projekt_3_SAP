@@ -17,6 +17,7 @@ class TileHandler:
         self.playerTile3 = Tile(2 * self.boxsizeWithMargin + 10, 10 + self.fontsize, screen, self.scale)
         self.playerTile4 = Tile(3 * self.boxsizeWithMargin + 10, 10 + self.fontsize, screen, self.scale)
         self.playerTile5 = Tile(4 * self.boxsizeWithMargin + 10, 10 + self.fontsize, screen, self.scale)
+        self.playerTiles = [self.playerTile5, self.playerTile4, self.playerTile3, self.playerTile2, self.playerTile1]
 
         self.shopTile1 = Tile(10, int(self.screen.get_height() - self.boxsizeWithMargin), screen, self.scale, "shopTile")
         self.shopTile2 = Tile(self.boxsizeWithMargin + 10, int(self.screen.get_height() - self.boxsizeWithMargin), screen, self.scale, "shopTile")

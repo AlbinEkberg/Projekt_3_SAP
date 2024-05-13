@@ -6,6 +6,11 @@ class VisualEffects:
     def __init__(self, screen, frame_rate=60, direction=1, tile=None):
         self.screen = screen
         self.creatureInfo = CreatureInfo(self.screen)
+
+        self.moneyImage = pygame.transform.smoothscale(pygame.image.load("img/gold_coin.png"), (int(self.screen.get_width() * 0.05), int(self.screen.get_width() * 0.05)))
+        self.earnText = TextHandler(self.screen, int(self.moneyImage.get_width() / 2), (0, 0), True, "green")
+        self.costText = TextHandler(self.screen, int(self.moneyImage.get_width() / 2), (0, 0), True, "red")
+
         self.tile = tile
         self.frame_rate = frame_rate
         self.x = 0
@@ -15,14 +20,18 @@ class VisualEffects:
         self.creatureWidth = int(self.screen.get_width() * 0.09)
         self.textY = 0
         self.takeDamage = False
-        self.damageTextMoved = True
         self.atkAnimationComplete = True
         self.deathAnimationComplete = True
+        self.statAnimationCompleted = True
 
         self.speed = 1
-
-        self.textHandler = TextHandler(self.screen, int(self.screen.get_width() * 0.06), (0, 0), True, "red")
-
+        
+        if tile != None:
+            self.atkIncrease = TextHandler(self.screen, self.tile.fontsize * 2, self.tile.atkTextPos, True, "green")
+            self.atkDecrease = TextHandler(self.screen, self.tile.fontsize * 2, self.tile.atkTextPos, True, "red")
+            self.hpIncrease = TextHandler(self.screen, self.tile.fontsize * 2, self.tile.hpTextPos, True, "green")
+            self.hpDecrease = TextHandler(self.screen, self.tile.fontsize * 2, self.tile.hpTextPos, True, "red")
+        
     def showSelected(self, selected):
         pos = pygame.mouse.get_pos()
 
@@ -32,12 +41,18 @@ class VisualEffects:
             self.screen.blit(imageToDisplay, imageToDisplay.get_rect(center=(pos)))
 
     def infoWhileHover(self, selected, content, pos):
-
         if content != None and selected == None:
             self.creatureInfo.displayInfo(content["type"], pos)
 
+    def costWhileHover(self, money):
+        pos = pygame.mouse.get_pos()
+        self.screen.blit(self.moneyImage, pos)
+        if money >= 0:
+            self.earnText.drawText(str(money), (int(pos[0] + self.moneyImage.get_width() / 2), int(pos[1] + self.moneyImage.get_height() / 2)))
+        elif money < 0:
+            self.costText.drawText(str(abs(money)), (int(pos[0] + self.moneyImage.get_width() / 2), int(pos[1] + self.moneyImage.get_height() / 2)))
+        
     def moveForwardAnimation(self, travelDistance, content, moveFromTile, direction):
-
         self.x += int((travelDistance / self.frame_rate) * self.speed) * direction
         self.y = 1 / travelDistance * self.x**2 - self.x * direction
 
@@ -69,7 +84,7 @@ class VisualEffects:
             self.deathAnimationComplete = False
 
     def creatureAtkAnimation(self, damageTaken):
-        if self.damageTextMoved == True:
+        if self.statAnimationCompleted == True:
             if (self.x >= 0 and self.direction < 0) or (self.x <= 0 and self.direction > 0):
                 self.moveBack = 1
                 if self.direction == 1:
@@ -84,16 +99,13 @@ class VisualEffects:
 
             self.screen.blit(self.creatureImage, (self.x + self.tile.x, self.y + self.tile.y))
 
+            self.tile.displayStats()
+
         if abs(self.x) >= self.travelDistance:
             self.takeDamage = True if self.textY == 0 else False
-        
-            self.damageTextMoved = False
             self.screen.blit(self.creatureImage, (self.x + self.tile.x, self.y + self.tile.y))
-            self.textY -= 2
-            self.textHandler.drawText("-" + str(damageTaken), (self.x + self.tile.x + int(self.creatureWidth / 2), self.textY + self.tile.y + int(self.creatureWidth / 2)))
-            if self.textY < -50:
-                self.damageTextMoved = True
-                self.textY = 0
+            self.tile.displayStats()
+            self.statChange("hp", (damageTaken) * -1)
             self.moveBack = -1
 
         if (self.x >= 0 and self.direction < 0) or (self.x <= 0 and self.direction > 0):
@@ -102,14 +114,27 @@ class VisualEffects:
             self.atkAnimationComplete = False
 
     def statChange(self, whichStat, amount):
-        self.takeDamage = True if self.textY == 0 else False
-    
-        self.changeTextMoved = False
-        self.screen.blit(self.creatureImage, (self.x + self.tile.x, self.y + self.tile.y))
-        self.changeTextY -= 2
-        self.textHandler.drawText(str(amount), (self.x + self.tile.x + int(self.creatureWidth / 2), self.textY + self.tile.y + int(self.creatureWidth / 2)))
+        self.statAnimationCompleted = False
+
+        if whichStat == "hp":
+            if amount >= 0:
+                self.statText = self.hpIncrease
+            else:
+                self.statText = self.hpDecrease
+
+            self.statPos = (self.tile.hpTextPos[0], self.tile.hpTextPos[1] + self.textY)
+        
+        else:
+            if amount >= 0:
+                self.statText = self.atkIncrease
+            else:
+                self.statText = self.atkDecrease
+
+            self.statPos = (self.tile.atkTextPos[0], self.tile.atkTextPos[1] + self.textY)
+
+        self.statText.drawText(str(amount), self.statPos)
+
+        self.textY -= self.speed
         if self.textY < -50:
             self.statAnimationCompleted = True
             self.textY = 0
-        self.moveBack = -1
-        

@@ -7,6 +7,8 @@ class TextHandler:
             self.color = pygame.Color(0, 0, 0)
         elif color == "red":
             self.color = pygame.Color(255, 0, 0)
+        elif color == "green":
+            self.color = pygame.Color(0, 255, 0)
 
         self.x = pos[0]
         self.y = pos[1]
