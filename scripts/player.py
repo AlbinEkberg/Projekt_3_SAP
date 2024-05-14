@@ -1,4 +1,5 @@
 import pygame
+import copy
 from scripts.tileHandler import TileHandler
 from scripts.visualEffects import VisualEffects
 from scripts.button import Button
@@ -22,6 +23,7 @@ class Player:
         self.playerTile3VFX = VisualEffects(self.screen, frame_rate, 1, self.tileHandler.playerTile3)
         self.playerTile4VFX = VisualEffects(self.screen, frame_rate, 1, self.tileHandler.playerTile4)
         self.playerTile5VFX = VisualEffects(self.screen, frame_rate, 1, self.tileHandler.playerTile5)
+        self.playerTilesVFX = [self.playerTile5VFX, self.playerTile4VFX, self.playerTile3VFX, self.playerTile2VFX, self.playerTile1VFX]
 
         self.moneyX = 10
         self.moneyY = int(10 + self.tileHandler.boxsizeWithMargin + self.tileHandler.fontsize)
@@ -31,13 +33,15 @@ class Player:
         self.moneyText = TextHandler(self.screen, int(tileWidth * 0.2), (int(self.moneyX + statWidth/2), int(self.moneyY + statWidth/2)), True)
         self.moneyLeft = 0
 
-        self.abilities = Ability(self.screen)
+        self.abilities = Ability()
 
     def displayCoins(self):
         self.screen.blit(self.moneyImage, (self.moneyX, self.moneyY))
         self.moneyText.drawText(self.moneyLeft)
 
     def store(self, round):
+        playerTilesContentOG = [copy.deepcopy(tile.content) for tile in self.tileHandler.playerTiles]
+
         # makes sure you don't accidentally buy a creature immidietly after ending the battle
         if pygame.mouse.get_pressed()[0] == 0 and self.startShop == True:
             self.freeRolls = 0
@@ -103,3 +107,10 @@ class Player:
 
         if self.justRolled == False and shopContent != [self.tileHandler.shopTile1.content, self.tileHandler.shopTile2.content, self.tileHandler.shopTile3.content, self.tileHandler.shopTile4.content]:
             self.moneyLeft -= 6
+
+        for i in range(5):
+            if playerTilesContentOG[i] != self.tileHandler.playerTiles[i].content and playerTilesContentOG[i] != None and self.tileHandler.playerTiles[i].content != None and playerTilesContentOG[i]["type"] == self.tileHandler.playerTiles[i].content["type"]:
+                self.playerTilesVFX[i].statChange(self.tileHandler.playerTiles[i].content["hp"] - playerTilesContentOG[i]["hp"], self.tileHandler.playerTiles[i].content["atk"] - playerTilesContentOG[i]["atk"]) if self.tileHandler.playerTiles[i].content["hp"] - playerTilesContentOG[i]["hp"] != 0 or self.tileHandler.playerTiles[i].content["atk"] - playerTilesContentOG[i]["atk"] != 0 else None
+            
+            if self.playerTilesVFX[i].statAnimationCompleted == False:
+                self.playerTilesVFX[i].statChange(0, 0, True)

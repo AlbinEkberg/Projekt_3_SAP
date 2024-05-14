@@ -1,10 +1,20 @@
 class Ability:
-    def __init__(self, screen):
-        self.screen = screen
+    def __init__(self):
+        pass
         
     def affectAll(self, tileArray):
         for tile in tileArray:
             tile
+
+    def frontToBack(self, tileArray, hpChange, atkChange, affectedCreatures):
+        i = 0
+        given = 0
+        while i < 5 and given < affectedCreatures:
+            if tileArray[i].content != None:
+                tileArray[i].content["hp"] += hpChange
+                tileArray[i].content["atk"] += atkChange
+                given += 1
+            i += 1
 
     def startOrEnd(self, tileArray, gameStage):
         if gameStage == 3 or gameStage > 6:
@@ -27,8 +37,10 @@ class Ability:
                         match tile.content["type"]:
                             case "goblin":
                                 self.goldToSteal += tile.content["lvl"]
-                            case "unicorn":
+                            case "bigfoot":
                                 tile.content["hp"] += tile.content["lvl"]
+                            case "yeti":
+                                tile.content["atk"] += tile.content["lvl"]
 
     def sell(self, tileArray, creature):
         if creature != None:
@@ -36,6 +48,10 @@ class Ability:
             match creature["type"]:
                 case "gnome":
                     self.freeRolls = 1 * creature["lvl"]
+                case "pig":
+                    self.frontToBack(tileArray, 1, 0, creature["lvl"])
+                case "unicorn":
+                    self.frontToBack(tileArray, 0, 1, creature["lvl"])
 
     def buy(self, tileArray, creature):
         pass
@@ -43,6 +59,10 @@ class Ability:
     def death(self, tileArray, creature):
         match creature["type"]:
             case "gingerbread":
+                self.frontToBack(tileArray, creature["lvl"], creature["lvl"], 2)
+                creature["hp"] -= creature["lvl"]
+                creature["atk"] -= creature["lvl"]
+            case "bomb":
                 pass
 
     def kill(self, tileArray, creature):

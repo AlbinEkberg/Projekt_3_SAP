@@ -4,6 +4,7 @@ from scripts.tile import Tile
 from scripts.moveForward import MoveForward
 from scripts.visualEffects import VisualEffects
 from scripts.textHandler import TextHandler
+from scripts.ability import Ability
 
 class Battle:
     def __init__(self, screen, frame_rate):
@@ -14,6 +15,7 @@ class Battle:
         self.boxsizeWithMargin = tileWidth + 5
         self.tileY = int(self.screen.get_height() / 2 - tileWidth / 2)
         self.fontsize = int(tileWidth * 0.2)
+        self.statChangeComplete = True
 
         # tile number 5 for each of the players is the one closest to the middle
         self.player1Tile1 = Tile(5, self.tileY, screen, scale)
@@ -43,11 +45,13 @@ class Battle:
         self.player2Tile4VFX = VisualEffects(self.screen, frame_rate, -1, self.player2Tile4)
         self.player2Tile5VFX = VisualEffects(self.screen, frame_rate, -1, self.player2Tile5)
 
-        self.player1VFX = [self.player1Tile5VFX, self.player1Tile4VFX, self.player1Tile3VFX, self.player1Tile2VFX, self.player1Tile1VFX]
-        self.player2VFX = [self.player2Tile5VFX, self.player2Tile4VFX, self.player2Tile3VFX, self.player2Tile2VFX, self.player2Tile1VFX]
+        self.player1TilesVFX = [self.player1Tile5VFX, self.player1Tile4VFX, self.player1Tile3VFX, self.player1Tile2VFX, self.player1Tile1VFX]
+        self.player2TilesVFX = [self.player2Tile5VFX, self.player2Tile4VFX, self.player2Tile3VFX, self.player2Tile2VFX, self.player2Tile1VFX]
 
         self.player1MoveForward = MoveForward(self.screen, self.boxsizeWithMargin, frame_rate, "left", self.player1Tiles)
         self.player2MoveForward = MoveForward(self.screen, self.boxsizeWithMargin, frame_rate, "right", self.player2Tiles)
+
+        self.abilities = Ability()
 
         fontsize = int(self.screen.get_width() * 0.05)
         self.player1Text = TextHandler(self.screen, fontsize, (int(self.screen.get_width() / 10), self.tileY - (fontsize / 2) - 10), True)
@@ -88,21 +92,25 @@ class Battle:
         self.player2Tile5.blitTile()
 
     def duringBattle(self, gameStage):
+        player1TilesContentOG = [copy.deepcopy(tile.content) for tile in self.player1Tiles]
+        player2TilesContentOG = [copy.deepcopy(tile.content) for tile in self.player1Tiles]
+        
         self.gameStage = gameStage
         self.displayBattle()
         self.player1Tile5.displayWithCreature = True
         self.player2Tile5.displayWithCreature = True
 
         allMovementDone = False
-        self.player1MoveForward.moveForward()
-        self.player2MoveForward.moveForward()
-        if self.player1MoveForward.movementDone == True and self.player2MoveForward.movementDone == True:
+        if self.statChangeComplete == True:
             self.player1MoveForward.moveForward()
             self.player2MoveForward.moveForward()
             if self.player1MoveForward.movementDone == True and self.player2MoveForward.movementDone == True:
-                allMovementDone = True
+                self.player1MoveForward.moveForward()
+                self.player2MoveForward.moveForward()
+                if self.player1MoveForward.movementDone == True and self.player2MoveForward.movementDone == True:
+                    allMovementDone = True
 
-        if allMovementDone == True:
+        if allMovementDone == True and self.statChangeComplete == True:
             if self.player1Tile5.content != None and self.player2Tile5.content != None:
                 self.player1Damage = self.player2Tile5.content["atk"]
                 self.player2Damage = self.player1Tile5.content["atk"]
@@ -129,20 +137,26 @@ class Battle:
         player2EmptyTiles = 0
         for i in range(5):
             if self.player1Tiles[i].content != None:
-                if self.player1Tiles[i].content["hp"] < 1 and self.player1VFX[i].atkAnimationComplete == True:
-                    self.player1VFX[i].creatureDeathAnimation()
+                if self.player1Tiles[i].content["hp"] < 1 and self.player1TilesVFX[i].atkAnimationComplete == True:
+                    self.player1TilesVFX[i].creatureDeathAnimation()
+
                     self.player1Tile5.displayWithCreature = False
 
-                    self.player1Tiles[i].content = None if self.player1VFX[i].deathAnimationComplete == True else self.player1Tiles[i].content
+                    if self.player1TilesVFX[i].deathAnimationComplete == True:
+                        self.abilities.death(self.player1Tiles, self.player1Tiles[i].content)
+                        self.player1Tiles[i].content = None
             else:
                 player1EmptyTiles += 1
 
             if self.player2Tiles[i].content != None:
-                if self.player2Tiles[i].content["hp"] < 1 and self.player2VFX[i].atkAnimationComplete == True:
-                    self.player2VFX[i].creatureDeathAnimation()
+                if self.player2Tiles[i].content["hp"] < 1 and self.player2TilesVFX[i].atkAnimationComplete == True:
+                    self.player2TilesVFX[i].creatureDeathAnimation()
+
                     self.player2Tile5.displayWithCreature = False
 
-                    self.player2Tiles[i].content = None if self.player2VFX[i].deathAnimationComplete == True else self.player2Tiles[i].content
+                    if self.player2TilesVFX[i].deathAnimationComplete == True:
+                        self.abilities.death(self.player2Tiles, self.player2Tiles[i].content)
+                        self.player2Tiles[i].content = None 
             else:
                 player2EmptyTiles += 1
         
@@ -155,3 +169,21 @@ class Battle:
         elif player1EmptyTiles == 5 and allMovementDone == True:
             self.winner = "player 2"
             self.gameStage += 1
+
+        self.statChangeComplete = True
+        for i in range(5):
+            if self.player1TilesVFX[i].atkAnimationComplete == True:
+                if player1TilesContentOG[i] != self.player1Tiles[i].content and player1TilesContentOG[i] != None and self.player1Tiles[i].content != None and player1TilesContentOG[i]["type"] == self.player1Tiles[i].content["type"]:
+                    self.player1TilesVFX[i].statChange(self.player1Tiles[i].content["hp"] - player1TilesContentOG[i]["hp"], self.player1Tiles[i].content["atk"] - player1TilesContentOG[i]["atk"]) if self.player1Tiles[i].content["hp"] - player1TilesContentOG[i]["hp"] != 0 or self.player1Tiles[i].content["atk"] - player1TilesContentOG[i]["atk"] != 0 else None
+            
+                if self.player1TilesVFX[i].statAnimationCompleted == False:
+                    self.statChangeComplete = False
+                    self.player1TilesVFX[i].statChange(0, 0, True)
+
+            if self.player2TilesVFX[i].atkAnimationComplete == True:
+                if player2TilesContentOG[i] != self.player2Tiles[i].content and player2TilesContentOG[i] != None and self.player2Tiles[i].content != None and player2TilesContentOG[i]["type"] == self.player2Tiles[i].content["type"]:
+                    self.player2TilesVFX[i].statChange(self.player2Tiles[i].content["hp"] - player2TilesContentOG[i]["hp"], self.player2Tiles[i].content["atk"] - player2TilesContentOG[i]["atk"]) if self.player2Tiles[i].content["hp"] - player2TilesContentOG[i]["hp"] != 0 or self.player2Tiles[i].content["atk"] - player2TilesContentOG[i]["atk"] != 0 else None
+            
+                if self.player2TilesVFX[i].statAnimationCompleted == False:
+                    self.statChangeComplete = False
+                    self.player2TilesVFX[i].statChange(0, 0, True)

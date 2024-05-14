@@ -105,7 +105,7 @@ class VisualEffects:
             self.takeDamage = True if self.textY == 0 else False
             self.screen.blit(self.creatureImage, (self.x + self.tile.x, self.y + self.tile.y))
             self.tile.displayStats()
-            self.statChange("hp", (damageTaken) * -1)
+            self.statChange(damageTaken * -1, 0)
             self.moveBack = -1
 
         if (self.x >= 0 and self.direction < 0) or (self.x <= 0 and self.direction > 0):
@@ -113,26 +113,28 @@ class VisualEffects:
         else: 
             self.atkAnimationComplete = False
 
-    def statChange(self, whichStat, amount):
+    def statChange(self, hpChange, atkChange, continueAnimation=False):
+        if continueAnimation == False:
+            self.hpChange = hpChange
+            self.atkChange = atkChange
+
         self.statAnimationCompleted = False
 
-        if whichStat == "hp":
-            if amount >= 0:
+        if self.hpChange != 0:
+            if self.hpChange > 0:
                 self.statText = self.hpIncrease
             else:
                 self.statText = self.hpDecrease
 
-            self.statPos = (self.tile.hpTextPos[0], self.tile.hpTextPos[1] + self.textY)
+            self.statText.drawText(str(self.hpChange), (self.tile.hpTextPos[0], self.tile.hpTextPos[1] + self.textY))
         
-        else:
-            if amount >= 0:
+        if self.atkChange != 0:
+            if self.atkChange >= 0:
                 self.statText = self.atkIncrease
             else:
                 self.statText = self.atkDecrease
 
-            self.statPos = (self.tile.atkTextPos[0], self.tile.atkTextPos[1] + self.textY)
-
-        self.statText.drawText(str(amount), self.statPos)
+            self.statText.drawText(str(self.atkChange), (self.tile.atkTextPos[0], self.tile.atkTextPos[1] + self.textY))
 
         self.textY -= self.speed
         if self.textY < -50:

@@ -6,8 +6,10 @@ class Creature:
         gnomeImage = pygame.image.load("img/gnome.png")
         goblinImage = pygame.image.load("img/goblin.png")
         bigfootImage = pygame.image.load("img/bigfoot.png")
+        yetiImage = pygame.image.load("img/yeti.png")
         knightImage = pygame.image.load("img/knight.png")
         pigImage = pygame.image.load("img/flying_pig.png")
+        fairyImage = pygame.image.load("img/fairy.png")
         unicornImage = pygame.image.load("img/unicorn.png")
         ogreImage = pygame.image.load("img/ogre.png")
         gingerbreadImage = pygame.image.load("img/gingerbread_man.png")
@@ -21,18 +23,20 @@ class Creature:
         self.creatureList1 = [
         {"type": "gnome", "img": gnomeImage, "atk": 1, "hp": 2, "lvl": 1, "xp": 0}, 
         {"type": "goblin", "img": goblinImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0},
-        {"type": "bigfoot", "img": bigfootImage, "atk": 2, "hp": 2, "lvl": 1, "xp": 0},
-        {"type": "knight", "img": knightImage, "atk": 3, "hp": 2, "lvl": 1, "xp": 0},
+        {"type": "bigfoot", "img": bigfootImage, "atk": 1, "hp": 2, "lvl": 1, "xp": 0},
+        {"type": "yeti", "img": yetiImage, "atk": 2, "hp": 1, "lvl": 1, "xp": 0},
+        {"type": "unicorn", "img": unicornImage, "atk": 4, "hp": 1, "lvl": 1, "xp": 0},
         {"type": "pig", "img": pigImage, "atk": 1, "hp": 4, "lvl": 1, "xp": 0},
-        {"type": "unicorn", "img": unicornImage, "atk": 2, "hp": 1, "lvl": 1, "xp": 0}
+        {"type": "knight", "img": knightImage, "atk": 3, "hp": 2, "lvl": 1, "xp": 0}
         ]
 
         self.creatureList2 = [
-        {"type": "ogre", "img": ogreImage, "atk": 2, "hp": 4, "lvl": 1, "xp": 0},
+        {"type": "ogre", "img": ogreImage, "atk": 3, "hp": 4, "lvl": 1, "xp": 0},
         {"type": "gingerbread", "img": gingerbreadImage, "atk": 2, "hp": 2, "lvl": 1, "xp": 0},
         {"type": "rock", "img": rockImage, "atk": 1, "hp": 12, "lvl": 1, "xp": 0},
         {"type": "bomb", "img": bombImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0},
-        {"type": "witch", "img": witchImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0}
+        {"type": "witch", "img": witchImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0},
+        {"type": "fairy", "img": fairyImage, "atk": 4, "hp": 1, "lvl": 1, "xp": 0}
         ]
 
         self.creatureList3 = [

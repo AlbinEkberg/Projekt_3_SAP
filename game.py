@@ -27,7 +27,7 @@ class Game:
 
         player1 = Player(self.screen, self.frame_rate, 1)
         player2 = Player(self.screen, self.frame_rate, 2)
-        battle = Battle(self.screen, self.frame_rate)
+        self.battle = Battle(self.screen, self.frame_rate)
         buttonWidth = int(self.screen.get_width() * 0.14) * 3 / 2 + 5
         self.nextButton = Button(self.screen, pygame.image.load("img/next_button.png"), (self.screen.get_width() - buttonWidth - 10, int(self.screen.get_height() - (10 + int((self.screen.get_width() * 0.14) + 10) + int(self.screen.get_width() * 0.14 * 0.2) + (self.screen.get_width() * 0.18 * 0.5)))))
         self.slowButtonImage = pygame.image.load("img/slow_speed_button.png")
@@ -36,10 +36,10 @@ class Game:
         self.speedButtonImages = [self.slowButtonImage, self.mediumButtonImage, self.fastButtonImage]
         self.speedButton = Button(self.screen, self.slowButtonImage, (int(self.screen.get_width() / 2 - buttonWidth / 2), int(self.screen.get_height() / 6) * 5))
 
-        abilities = Ability(self.screen)
+        abilities = Ability()
 
-        player1OGTiles = None
-        player2OGTiles = None
+        player1TilesOG = None
+        player2TilesOG = None
         gameStage = 1000 # defaults the match and case
         round = 0
 
@@ -73,59 +73,50 @@ class Game:
                     player2.store(round)
                 case 3:
                 # assign content to tiles for battle
-                    battle.assignContent(gameStage, player1.tileHandler, player2.tileHandler)
-                    abilities.startOrEnd(battle.player1Tiles, gameStage)
-                    abilities.startOrEnd(battle.player2Tiles, gameStage)
-                    gameStage = battle.gameStage
+                    self.battle.assignContent(gameStage, player1.tileHandler, player2.tileHandler)
+                    abilities.startOrEnd(self.battle.player1Tiles, gameStage)
+                    abilities.startOrEnd(self.battle.player2Tiles, gameStage)
+                    gameStage = self.battle.gameStage
                 case 4: 
                 # start of battle
-                    battle.displayBattle()
-                    player1OGTiles = player1.tileHandler.playerTiles
-                    player2OGTiles = player2.tileHandler.playerTiles
+                    self.battle.displayBattle()
+                    player1TilesOG = player1.tileHandler.playerTiles
+                    player2TilesOG = player2.tileHandler.playerTiles
+
+                    self.speedButtonHandler()
 
                     for i in range(5):
-                        if battle.player1Tiles[i].content != player1OGTiles[i].content:
-                            battle.player1VFX[i].statChange("hp", battle.player1Tiles[i].content["hp"] - player1OGTiles[i].content["hp"]) if battle.player1Tiles[i].content["hp"] - player1OGTiles[i].content["hp"] != 0 else None
-                            battle.player1VFX[i].statChange("atk", battle.player1Tiles[i].content["atk"] - player1OGTiles[i].content["atk"]) if battle.player1Tiles[i].content["atk"] - player1OGTiles[i].content["atk"] != 0 else None
+                        if self.battle.player1Tiles[i].content != player1TilesOG[i].content:
+                            self.battle.player1TilesVFX[i].statChange(self.battle.player1Tiles[i].content["hp"] - player1TilesOG[i].content["hp"], self.battle.player1Tiles[i].content["atk"] - player1TilesOG[i].content["atk"])
 
-                        if battle.player2Tiles[i].content != player2OGTiles[i].content:
-                            battle.player2VFX[i].statChange("hp", battle.player2Tiles[i].content["hp"] - player2OGTiles[i].content["hp"]) if battle.player2Tiles[i].content["hp"] - player2OGTiles[i].content["hp"] != 0 else None
-                            battle.player2VFX[i].statChange("atk", battle.player2Tiles[i].content["atk"] - player2OGTiles[i].content["atk"]) if battle.player2Tiles[i].content["atk"] - player2OGTiles[i].content["atk"] != 0 else None
+                        if self.battle.player2Tiles[i].content != player2TilesOG[i].content:
+                            self.battle.player2TilesVFX[i].statChange(self.battle.player2Tiles[i].content["hp"] - player2TilesOG[i].content["hp"], self.battle.player2Tiles[i].content["atk"] - player2TilesOG[i].content["atk"])
 
                     animationsDone = 0
                     for i in range(5):
-                        animationsDone += 1 if battle.player1VFX[i].statAnimationCompleted == True else 0
-                        animationsDone += 1 if battle.player2VFX[i].statAnimationCompleted == True else 0
+                        animationsDone += 1 if self.battle.player1TilesVFX[i].statAnimationCompleted == True else 0
+                        animationsDone += 1 if self.battle.player2TilesVFX[i].statAnimationCompleted == True else 0
 
                     gameStage += 1 if animationsDone == 10 else 0
                 case 5:
                 # during battle
-                    battle.duringBattle(gameStage)
+                    self.battle.duringBattle(gameStage)
 
-                    if self.speedButton.activateOnClick():
-                        self.speed += 1
-                    self.speed = 0 if self.speed >= 3 else self.speed
-                    for tileVFX in battle.player1VFX:
-                        tileVFX.speed = self.speed * 2 + 1
-                    
-                    for tileVFX in battle.player2VFX:
-                        tileVFX.speed = self.speed * 2 + 1
+                    self.speedButtonHandler()
 
-                    battle.player1MoveForward.visualEffects.speed = self.speed * 2 + 1
-                    battle.player2MoveForward.visualEffects.speed = self.speed * 2 + 1
+                    self.battle.player1MoveForward.visualEffects.speed = self.speed * 2 + 1
+                    self.battle.player2MoveForward.visualEffects.speed = self.speed * 2 + 1
 
-                    self.speedButton.displayButton(self.speedButtonImages[self.speed])
-
-                    gameStage = battle.gameStage
+                    gameStage = self.battle.gameStage
 
                     clicked = True
                 case 6:
                 # end of battle
                     for i in range(5):
-                        battle.player1Tiles[i].displayWithCreature = True
-                        battle.player2Tiles[i].displayWithCreature = True
-                    battle.displayBattle()
-                    winnerText.drawText(battle.winner + " won the round")
+                        self.battle.player1Tiles[i].displayWithCreature = True
+                        self.battle.player2Tiles[i].displayWithCreature = True
+                    self.battle.displayBattle()
+                    winnerText.drawText(self.battle.winner + " won the round")
 
                     gameStage += 1 if pygame.mouse.get_pressed()[0] == 1 and clicked == False else 0
                     clicked = False if pygame.mouse.get_pressed()[0] == 0 else True
@@ -133,12 +124,12 @@ class Game:
                 # Default case if gameStage doesn't match any of the specified cases
                     player1.moneyLeft = 0
                     player2.moneyLeft = 0
-                    if player1OGTiles != None:
-                        abilities.startOrEnd(player1OGTiles, gameStage)
+                    if player1TilesOG != None:
+                        abilities.startOrEnd(player1TilesOG, gameStage)
                         player1.moneyLeft += abilities.goldToSteal
                         player2.moneyLeft -= abilities.goldToSteal
-                    if player2OGTiles != None:
-                        abilities.startOrEnd(player2OGTiles, gameStage)
+                    if player2TilesOG != None:
+                        abilities.startOrEnd(player2TilesOG, gameStage)
                         player2.moneyLeft += abilities.goldToSteal
                         player1.moneyLeft -= abilities.goldToSteal
                     player1.tileHandler.updateShop(round)
@@ -156,5 +147,18 @@ class Game:
 
         pygame.quit()
         sys.exit()
+
+    def speedButtonHandler(self):
+        if self.speedButton.activateOnClick():
+            self.speed += 1
+        self.speed = 0 if self.speed >= 3 else self.speed
+        for tileVFX in self.battle.player1TilesVFX:
+            tileVFX.speed = self.speed * 2 + 1
+        
+        for tileVFX in self.battle.player2TilesVFX:
+            tileVFX.speed = self.speed * 2 + 1
+        
+        self.speedButton.displayButton(self.speedButtonImages[self.speed])
+
 
 Game().run()

@@ -24,17 +24,19 @@ class CreatureInfo:
             case "goblin":
                 self.infoText.drawText("Goblin\nend of battle:\nsteals gold equivalent\nto the goblins lvl")
             case "bigfoot":
-                self.infoText.drawText("Bigfoot")
+                self.infoText.drawText("Bigfoot\nend of battle:\ngains 1 hp\n(+1 hp/lvl)")
+            case "yeti":
+                self.infoText.drawText("Yeti\nend of battle:\ngains 1 atk\n(+1 atk/lvl)")
             case "knight":
                 self.infoText.drawText("Knight\nthis creature doesn't\nhave an ability")
             case "pig":
-                self.infoText.drawText("Pig")
+                self.infoText.drawText("Pig\nwhen sold:\ngives frontmost creature\n1 hp (+1 creature/lvl)")
             case "unicorn":
-                self.infoText.drawText("Unicorn\nend of battle:\ngains hp depending\non its level")
+                self.infoText.drawText("Unicorn\nwhen sold:\ngives frontmost creature\n1 atk (+1 creature/lvl)")
             case "ogre":
                 self.infoText.drawText("Ogre\nstart of batte:\nattack increases the\nless creatures you have")
             case "gingerbread":
-                self.infoText.drawText("Gingerbread Man\non death:\ngives hp depending on lvl\nto the creature behind")
+                self.infoText.drawText("Gingerbread Man\non death:\ngives 1 hp and 1 atk to the\nfrontmost creature (+1/lvl)")
             case "rock":
                 self.infoText.drawText("rock\ndoes not get bonus\nattack when combined\nwith other rocks")
             case "bomb":
