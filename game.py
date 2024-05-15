@@ -1,3 +1,8 @@
+# Author: Albin Ekberg
+# Date: 15/5 2024
+# Description: A game inspired by the popular game "super auto pets"
+# game.py, player.py, tileHandler.py and tile.py are all commented
+
 import sys
 import pygame
 import moviepy.editor
