@@ -171,19 +171,3 @@ class Battle:
             self.gameStage += 1
 
         self.statChangeComplete = True
-        for i in range(5):
-            if self.player1TilesVFX[i].atkAnimationComplete == True:
-                if player1TilesContentOG[i] != self.player1Tiles[i].content and player1TilesContentOG[i] != None and self.player1Tiles[i].content != None and player1TilesContentOG[i]["type"] == self.player1Tiles[i].content["type"]:
-                    self.player1TilesVFX[i].statChange(self.player1Tiles[i].content["hp"] - player1TilesContentOG[i]["hp"], self.player1Tiles[i].content["atk"] - player1TilesContentOG[i]["atk"]) if self.player1Tiles[i].content["hp"] - player1TilesContentOG[i]["hp"] != 0 or self.player1Tiles[i].content["atk"] - player1TilesContentOG[i]["atk"] != 0 else None
-            
-                if self.player1TilesVFX[i].statAnimationCompleted == False:
-                    self.statChangeComplete = False
-                    self.player1TilesVFX[i].statChange(0, 0, True)
-
-            if self.player2TilesVFX[i].atkAnimationComplete == True:
-                if player2TilesContentOG[i] != self.player2Tiles[i].content and player2TilesContentOG[i] != None and self.player2Tiles[i].content != None and player2TilesContentOG[i]["type"] == self.player2Tiles[i].content["type"]:
-                    self.player2TilesVFX[i].statChange(self.player2Tiles[i].content["hp"] - player2TilesContentOG[i]["hp"], self.player2Tiles[i].content["atk"] - player2TilesContentOG[i]["atk"]) if self.player2Tiles[i].content["hp"] - player2TilesContentOG[i]["hp"] != 0 or self.player2Tiles[i].content["atk"] - player2TilesContentOG[i]["atk"] != 0 else None
-            
-                if self.player2TilesVFX[i].statAnimationCompleted == False:
-                    self.statChangeComplete = False
-                    self.player2TilesVFX[i].statChange(0, 0, True)

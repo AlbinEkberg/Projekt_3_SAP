@@ -35,12 +35,12 @@ class Creature:
         {"type": "gingerbread", "img": gingerbreadImage, "atk": 2, "hp": 2, "lvl": 1, "xp": 0},
         {"type": "rock", "img": rockImage, "atk": 1, "hp": 12, "lvl": 1, "xp": 0},
         {"type": "bomb", "img": bombImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0},
-        {"type": "witch", "img": witchImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0},
-        {"type": "fairy", "img": fairyImage, "atk": 4, "hp": 1, "lvl": 1, "xp": 0}
+        {"type": "witch", "img": witchImage, "atk": 5, "hp": 4, "lvl": 1, "xp": 0},
+        {"type": "fairy", "img": fairyImage, "atk": 4, "hp": 5, "lvl": 1, "xp": 0}
         ]
 
         self.creatureList3 = [
-            {"type": "minotaur", "img": minotaurImage, "atk": 6, "hp": 3, "lvl": 1, "xp": 0},
+            {"type": "minotaur", "img": minotaurImage, "atk": 4, "hp": 7, "lvl": 1, "xp": 0},
             {"type": "trex", "img": trexImage, "atk": 7, "hp": 4, "lvl": 1, "xp": 0},
             {"type": "mirror", "img": mirrorImage, "atk": 1, "hp": 1, "lvl": 1, "xp": 0}
         ]

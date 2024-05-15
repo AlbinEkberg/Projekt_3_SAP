@@ -29,7 +29,7 @@ class Ability:
                                 for emptyCheck in tileArray:
                                     if emptyCheck.content == None:
                                         atkIncrease += 1
-                                atkIncrease * tile.content["lvl"]
+                                atkIncrease * tile.content["lvl"] * 2
                                 print(atkIncrease)
                                 tile.content["atk"] += atkIncrease
 

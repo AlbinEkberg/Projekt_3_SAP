@@ -38,16 +38,18 @@ class CreatureInfo:
             case "gingerbread":
                 self.infoText.drawText("Gingerbread Man\non death:\ngives 1 hp and 1 atk to the\nfrontmost creature (+1/lvl)")
             case "rock":
-                self.infoText.drawText("rock\ndoes not get bonus\nattack when combined\nwith other rocks")
+                self.infoText.drawText("rock\npassive:\natk gained from xp is\nconverted to hp")
             case "bomb":
-                self.infoText.drawText("Bomb\non death:\nexplodes, damaging ALL\nadjacent creatures")
+                self.infoText.drawText("Bomb\nthis creature doesn't\nhave an ability")
             case "witch":
-                self.infoText.drawText("Witch")
+                self.infoText.drawText("Witch\nthis creature doesn't\nhave an ability")
+            case "fairy":
+                self.infoText.drawText("Fairy\nthis creature doesn't\nhave an ability")
             case "minotaur":
-                self.infoText.drawText("Minotaur")
+                self.infoText.drawText("Minotaur\nthis creature doesn't\nhave an ability")
             case "trex":
-                self.infoText.drawText("Trex")
+                self.infoText.drawText("Trex\nthis creature doesn't\nhave an ability")
             case "mirror":
-                self.infoText.drawText("Mirror")
+                self.infoText.drawText("Mirror\nthis creature doesn't\nhave an ability")
 
         self.screen.blit(self.infoSurface, pos)

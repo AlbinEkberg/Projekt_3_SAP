@@ -52,6 +52,12 @@ class VisualEffects:
         elif money < 0:
             self.costText.drawText(str(abs(money)), (int(pos[0] + self.moneyImage.get_width() / 2), int(pos[1] + self.moneyImage.get_height() / 2)))
         
+    # animation for when the creatures move to a tile closer to the middle
+    # parameters:   integer, travelDistance - pixel amount between start and finish
+    #               dictionary, content - a creature, which has a type, img, atk, hp, lvl and xp
+    #               tile object, moveFromTile - starting tile
+    #               integer, direction - should either be 1 or -1, 1 for left to right and -1 for right to left
+    # return:       Bool - will return true when animation is finished, otherwise false
     def moveForwardAnimation(self, travelDistance, content, moveFromTile, direction):
         self.x += int((travelDistance / self.frame_rate) * self.speed) * direction
         self.y = 1 / travelDistance * self.x**2 - self.x * direction
